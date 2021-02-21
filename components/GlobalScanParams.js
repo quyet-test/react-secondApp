@@ -1,0 +1,2 @@
+
+global.scanMethod = 0;

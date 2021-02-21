@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {Text, Button, View, Alert, StyleSheet} from 'react-native'
+import { Text, Button, View, Alert, StyleSheet } from 'react-native'
 
 import Card from '../components/Card'
 import NumberContainer from '../components/NumberContainer';
@@ -9,26 +9,27 @@ const generateRandomNumber = (min, max, exclude) => {
     max = Math.floor(max);
 
     console.log(min, max, exclude);
-    if (min === max ) {
+    if (min === max) {
         return exclude;
     }
 
-    let rdNumber = Math.random() * (max - min) + min;
+    let rdNumber = Math.ceil(Math.random() * (max - min) + min);
     if (rdNumber === exclude) {
         return generateRandomNumber(min, max, exclude);
     }
 
-    return Math.ceil(rdNumber);
+    return rdNumber;
 }
 
 const GameScreen = props => {
 
-    const [currentGuess, setCurrentGuess] = useState(generateRandomNumber(1, 100, props.userChoice));
+    const firstChoice = generateRandomNumber(1, 100, props.userChoice);
+    const [currentGuess, setCurrentGuess] = useState(firstChoice);
     const currentLow = useRef(1);
     const currentHight = useRef(100);
     const [rounds, setRounds] = useState(0);
 
-    const {userChoice, onGameOver} = props;
+    const { userChoice, onGameOver } = props;
 
     useEffect(() => {
         if (currentGuess === userChoice) {
@@ -37,9 +38,9 @@ const GameScreen = props => {
     }, [currentGuess, userChoice, onGameOver]);
 
     const guessNumberHandler = direction => {
-        if( (direction === 'lower' && currentGuess > props.userChoice) ||
-         (direction === 'greater' && currentGuess < props.userChoice) ) {
-            Alert.alert('Don\'t lie', 'You know it\'s incorrect. Plz try again',[{text:'Sorry', style:'cancel'}]);
+        if ((direction === 'lower' && currentGuess > props.userChoice) ||
+            (direction === 'greater' && currentGuess < props.userChoice)) {
+            Alert.alert('Don\'t lie', 'You know it\'s incorrect. Plz try again', [{ text: 'Sorry', style: 'cancel' }]);
             return;
         }
 
@@ -49,22 +50,22 @@ const GameScreen = props => {
             currentHight.current = currentGuess;
         }
 
-        setRounds(curRound => curRound + 1 );
-      //  console.log(rounds);
+        setRounds(curRound => curRound + 1);
+        //  console.log(rounds);
 
         const nextNumber = (generateRandomNumber(currentLow.current, currentHight.current, currentGuess));
-       // console.log(currentLow.current, currentHight.current, nextNumber);
+        // console.log(currentLow.current, currentHight.current, nextNumber);
         setCurrentGuess(nextNumber);
         return;
     }
 
-    return(
-        <View style = {styles.screen}>
+    return (
+        <View style={styles.screen}>
             <Text > Opponent's Guess</Text>
             <NumberContainer>{currentGuess}</NumberContainer>
-            <Card style = {styles.buttonContainer}>
-                <Button title='GREATER' onPress={ guessNumberHandler.bind(this, 'greater')}/>
-                <Button title='LOWER' onPress={ guessNumberHandler.bind(this, 'lower')}/>
+            <Card style={styles.buttonContainer}>
+                <Button title='GREATER' onPress={guessNumberHandler.bind(this, 'greater')} />
+                <Button title='LOWER' onPress={guessNumberHandler.bind(this, 'lower')} />
             </Card>
         </View>
     )
