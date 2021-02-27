@@ -9,15 +9,14 @@ import BodyText from '../components/BodyText';
 
 import '../components/GlobalScanParams'
 import products from '../data/products';
-import productPositions from '../data/productInPositions';
 import positions from '../data/positions';
 
 
 const renderListItem = (itemData) => {
 
-    console.log(itemData.item);
+    //console.log(itemData.item);
     const position = positions[itemData.item] === undefined ? {} : positions[itemData.item];
-    console.log(JSON.stringify(positions[itemData.item]));
+    //console.log(JSON.stringify(positions[itemData.item]));
     return (
         <View style={styles.listItem}>
             <BodyText>Colume: {position.Column}</BodyText>
@@ -31,9 +30,11 @@ const ProductDetail = props => {
     const [enteredInput, setEnteredInput] = useState('');
     const [confirmed, setConfirmed] = useState(false);
     const [foundProduct, setFoundProduct] = useState({});
+    const [readBarcode, setReadBarcode] = useState(false);
 
-    if (enteredInput === '' && props.data) {
+    if (!readBarcode && props.data) {
         setEnteredInput(props.data);
+        setReadBarcode(true);
     }
 
     const InputNumberHandler = inputText => {
@@ -44,6 +45,12 @@ const ProductDetail = props => {
         setEnteredInput('');
         setConfirmed(false);
     };
+
+    const cancelHandler = () => {
+        resetInputHandler();
+        props.onCancel();
+        // props.onScreenChange('mainScreen');
+    }
 
     const confirmInputHandler = () => {
         const chosenProduct = enteredInput;
@@ -70,7 +77,7 @@ const ProductDetail = props => {
 
     let foundProductOutput;
     if (confirmed) {
-        const positions = productPositions[foundProduct.Id];
+        const positions = props.searchProductPosition(foundProduct.Id); //productPositions[foundProduct.Id];
         foundProductOutput = <View style={styles.screen}>
             <View style={styles.productContainer}>
                 <View style={styles.productItem}>
@@ -116,10 +123,10 @@ const ProductDetail = props => {
                     />
                     <View style={styles.buttonContainer}>
                         <View style={styles.button}>
-                            <Button title={'Reset'} onPress={resetInputHandler} color={Colors.accent} />
+                            <Button title={'Cancel'} onPress={cancelHandler} color={Colors.accent} />
                         </View>
                         <View style={styles.button}>
-                            <Button title={'Confirm'} onPress={confirmInputHandler} color={Colors.primary} />
+                            <Button title={'OK'} onPress={confirmInputHandler} color={Colors.primary} />
                         </View>
                         <View style={styles.button}>
                             <Button title={'Scan'} onPress={scanSearchingProductHandler} color={Colors.primary} />
@@ -139,7 +146,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     productContainer: {
-        flex: 1,
+        //  flex: 1,
         padding: 5,
         alignItems: 'center'
     },
@@ -185,7 +192,8 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     button: {
-        width: 90,
+        width: 75,
+        fontSize: 15,
     },
     input: {
         textAlign: 'center',
@@ -197,17 +205,19 @@ const styles = StyleSheet.create({
     listItem: {
         borderColor: '#ccc',
         borderWidth: 1,
-        padding: 15,
+        padding: 5,
         marginVertical: 10,
+        marginLeft: 15,
         backgroundColor: 'white',
-        flexDirection: 'column',
+        flexDirection: 'row',
         justifyContent: 'space-between',
-        width: '100%'
+        width: '79%',
     },
     positionList: {
         flexGrow: 1,
         // alignItems: 'center',
         justifyContent: 'flex-start',
+        width: '100%',
     },
 });
 

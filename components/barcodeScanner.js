@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button, Modal } from 'react-native';
+import { Text, View, StyleSheet, Button, Modal, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 const BarcodeReader = props => {
@@ -14,7 +14,13 @@ const BarcodeReader = props => {
   }, []);
 
   const handleBarCodeScanned = ({ type, data }) => {
-    props.onScaned({ type, data });
+
+    // Alert.alert(
+    //   `Type: ${type}`,
+    //   `Data: ${data}`,
+    //   [{ text: 'OK', 'style': 'cancel' }]
+    // );
+    props.onScanned({ type, data });
   };
 
   if (hasPermission === null) {
