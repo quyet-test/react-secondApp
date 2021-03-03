@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Alert, View } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font'
@@ -34,11 +34,26 @@ export default function App() {
   const [searchingProd, setSearchingProd] = useState('');
 
   if (!appLoaded) {
+
+    useEffect(() => {
+      if (curScreen === 'mainSreen') {
+        setScanResult({});
+        setSearchingProd('');
+      }
+    }, [curScreen, setScanResult, setSearchingProd]);
     return <AppLoading
       startAsync={fetFonts}
       onFinish={() => { setApploaded(true) }}
       onError={(err => console.log(err))} />
   }
+
+
+  useEffect(() => {
+    if (curScreen === 'mainSreen') {
+      setScanResult({});
+      setSearchingProd('');
+    }
+  }, [curScreen, setScanResult, setSearchingProd]);
 
   const changeScreen = newScreen => {
     setPreviousScreen(curScreen);
@@ -46,8 +61,10 @@ export default function App() {
   }
 
   const onBackMainScreen = () => {
-    setProductPosition({});
-    changeScreen('mainSreen');
+    //setProductPosition({});
+    // changeScreen('mainSreen');
+    setPreviousScreen(curScreen);
+    setCurScreen('mainSreen');
   }
 
   const searchProductPosition = (product) => {
@@ -112,19 +129,19 @@ export default function App() {
       content = <BarcodeReader onCancel={scanCancelHandler} onScanned={scannedHandler} />;
       break;
     case 'mainSreen':
-      setScanResult({});
+      // setScanResult({});
       content = <MainScreen onScreenChange={changeScreen} />;
       break;
     case 'ProductDetail':
       content = <ProductDetail onScreenChange={changeScreen}
         searchProductPosition={searchProductPosition}
-        onCancel={scanCancelHandler}
+        onCancel={onBackMainScreen}
         data={searchingProd} />;
       break;
     case 'ProductUpdate':
       content = <ProductUpdate onScreenChange={changeScreen}
         onUpdate={addProductPosition}
-        onCancel={scanCancelHandler}
+        onCancel={onBackMainScreen}
         barcode={productPosition} />;
       break;
     default:
