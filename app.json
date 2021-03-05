@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "secondApp",
-    "slug": "secondApp",
+    "name": "The Meals",
+    "slug": "The Meals",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
