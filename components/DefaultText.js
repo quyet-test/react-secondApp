@@ -4,7 +4,7 @@ import { Text, View, StyleSheet } from 'react-native'
 const DefaultText = props => {
 
     return (
-        <Text style={styles.text}>
+        <Text style={{ ...styles.text }, { ...props.styles }}>
             {props.children}
         </Text>
     )
@@ -12,7 +12,7 @@ const DefaultText = props => {
 
 const styles = StyleSheet.create({
     text: {
-        fontFamily: 'open-sans-bold'
+        fontFamily: 'open-sans'
     }
 });
 
