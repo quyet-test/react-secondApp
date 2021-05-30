@@ -10,23 +10,25 @@ import BodyText from '../components/BodyText';
 import '../components/GlobalScanParams'
 import products from '../data/products';
 import positions from '../data/positions';
+import language from '../constants/language';
 
 
 const renderListItem = (itemData) => {
+    const languages = language['vn'];
 
     //console.log(itemData.item);
-    const position = positions[itemData.item] === undefined ? {} : positions[itemData.item];
+    const position = positions.find(position => position.id === itemData.item);
     //console.log(JSON.stringify(positions[itemData.item]));
     return (
         <View style={styles.listItem}>
-            <BodyText>Colume: {position.Column}</BodyText>
-            <BodyText>Zone: {position.Zone}</BodyText>
+            <BodyText>{languages['Column']}: {position.column}</BodyText>
+            <BodyText>{languages['Zone']}: {position.zone}</BodyText>
         </View>
     )
 };
 
 const ProductDetail = props => {
-
+    const languages = language['vn'];
     const [enteredInput, setEnteredInput] = useState('');
     const [confirmed, setConfirmed] = useState(false);
     const [foundProduct, setFoundProduct] = useState({});
@@ -53,12 +55,12 @@ const ProductDetail = props => {
     }
 
     const confirmInputHandler = () => {
-        const chosenProduct = enteredInput;
+        const chosenProduct = products.find(item => item.id === enteredInput);
         setEnteredInput('');
-        if (products[chosenProduct] === undefined) {
+        if (chosenProduct === undefined) {
             Alert.alert(
-                'Invalid Product',
-                'The input Product is not found',
+                languages['Invalid Product'],
+                languages['The input Product is not found'],
                 [{ text: 'OK', 'style': 'destructive', onPress: resetInputHandler }]
             );
             return;
@@ -66,7 +68,7 @@ const ProductDetail = props => {
 
         setConfirmed(true);
         // setSelectedNumber(chosenProduct);
-        setFoundProduct(products[chosenProduct]);
+        setFoundProduct(chosenProduct);
     };
 
     const scanSearchingProductHandler = () => {
@@ -77,26 +79,26 @@ const ProductDetail = props => {
 
     let foundProductOutput;
     if (confirmed) {
-        const positions = props.searchProductPosition(foundProduct.Id); //productPositions[foundProduct.Id];
+        const positions = props.searchProductPosition(foundProduct.id); //productPositions[foundProduct.Id];
         foundProductOutput = <View style={styles.screen}>
             <View style={styles.productContainer}>
                 <View style={styles.productItem}>
-                    <Text>Name</Text>
-                    <Text>{foundProduct.Name}</Text>
+                    <Text>{languages['Name']}</Text>
+                    <Text>{foundProduct.name}</Text>
                 </View>
                 <View style={styles.productItem}>
-                    <Text>Type</Text>
-                    <Text>{foundProduct.Type}</Text>
+                    <Text>{languages['Type']}</Text>
+                    <Text>{foundProduct.type}</Text>
                 </View>
-                <View style={styles.productItem}>
-                    <Text>Weight</Text>
+                {/* <View style={styles.productItem}>
+                    <Text>{languages['Weight']}</Text>
                     <Text>{foundProduct.Weight}</Text>
-                </View>
+                </View> */}
                 <View>
-                    <BodyText>You can find the product at:</BodyText>
+                    <BodyText>{languages['You can find the product at:']}</BodyText>
                 </View>
                 <FlatList
-                    keyExtractor={item => item}
+                    keyExtractor={item => item.id}
                     data={positions}
                     renderItem={renderListItem.bind(this)}
                     contentContainerStyle={styles.positionList}
@@ -112,9 +114,9 @@ const ProductDetail = props => {
             Keyboard.dismiss();
         }}>
             <View style={styles.screen}>
-                <Text style={styles.title}> Search or Updadate Product </Text>
+                <Text style={styles.title}> {languages['Search or Updadate Product']}</Text>
                 <Card style={styles.inputContainer}>
-                    <Text> Search Product: </Text>
+                    <Text>{languages['Search Product']}:</Text>
                     <Input style={styles.input}
                         blurOnSummit autoCapitalize='none'
                         autoCorrect={false}
@@ -123,13 +125,13 @@ const ProductDetail = props => {
                     />
                     <View style={styles.buttonContainer}>
                         <View style={styles.button}>
-                            <Button title={'Cancel'} onPress={cancelHandler} color={Colors.accent} />
+                            <Button title={languages['Cancel']} onPress={cancelHandler} color={Colors.accent} />
                         </View>
                         <View style={styles.button}>
-                            <Button title={'OK'} onPress={confirmInputHandler} color={Colors.primary} />
+                            <Button title={languages['OK']} onPress={confirmInputHandler} color={Colors.primary} />
                         </View>
                         <View style={styles.button}>
-                            <Button title={'Scan'} onPress={scanSearchingProductHandler} color={Colors.primary} />
+                            <Button title={languages['Scan']} onPress={scanSearchingProductHandler} color={Colors.primary} />
                         </View>
                     </View>
                 </Card>
@@ -205,9 +207,10 @@ const styles = StyleSheet.create({
     listItem: {
         borderColor: '#ccc',
         borderWidth: 1,
-        padding: 5,
+        padding: 20,
         marginVertical: 10,
         marginLeft: 15,
+        marginRight: 5,
         backgroundColor: 'white',
         flexDirection: 'row',
         justifyContent: 'space-between',

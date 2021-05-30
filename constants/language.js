@@ -1,0 +1,28 @@
+export default {
+    vn: {
+        'You can find the product at:': 'Sản phẩm lưu trữ tại:',
+        'Weight': 'Cân nặng',
+        'Type': 'Loại',
+        'Name': 'Tên',
+        'Invalid Product': 'Sản phẩm không hợp lệ.',
+        'The input Product is not found': 'Sản phẩm bạn vừa nhập không được tìm thấy.',
+        'Search Product': 'Tìm sản phẩm',
+        'Update Product': 'Thêm sản phẩm',
+        'Column': 'Cột',
+        'Zone': 'Khu vực',
+        'Search or Updadate Product': 'Thêm hoặc tìm kiếm sản phẩm',
+        'Search Product': 'Tìm sản phẩm',
+        'Cancel': 'Huỷ',
+        'OK': 'Đồng Ý',
+        'Scan': 'Quét',
+        'Cannot find the product': 'Không tìm thấy sản phẩm',
+        'Updated': 'Đã cập nhật',
+        'Update Ok': 'Cập nhật thành công',
+        'Invalid Position': 'Vị trí không hợp lệ',
+        'Cannot found position with column and zone': 'Không tìm thấy vị trị tại cột và khu vực',
+        'Position Information': 'Thông tin vị trí',
+        'Product Information': 'Thông tin sản phẩm',
+        'Confirm': 'Xác nhận',
+        'Product Management Demo': 'Quản lý sản phẩm',
+    }
+}

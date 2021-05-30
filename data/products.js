@@ -1,34 +1,12 @@
-const products = {
-    'p001': {
-        'Id': 'p001',
-        'Name': 'Cafe Trung Nguyen',
-        'Type': 'Do uong',
-        'Weight': '50 g'
-    },
-    'p002': {
-        'Id': 'p002',
-        'Name': 'Nest cafe',
-        'Type': 'Do uong',
-        'Weight': '50 g'
-    },
-    'p003': {
-        'Id': 'p003',
-        'Name': 'Cocacola',
-        'Type': 'Do uong',
-        'Weight': '300 g'
-    },
-    'p004': {
-        'Id': 'p004',
-        'Name': 'Pepsi',
-        'Type': 'Do uong',
-        'Weight': '300 g'
-    },
-    'p005': {
-        'Id': 'p005',
-        'Name': 'Bot giat Omo',
-        'Type': 'hang gia dung',
-        'Weight': '2 kg'
-    },
-};
+import Product from '../models/product';
+
+const products = [
+    new Product('p001', 'Sắt chữ U', 'Sắt', '50 g'),
+    new Product('p002', 'Sắt chữ T', 'Sắt', '50 g'),
+    new Product('p003', 'Sắt Phi 18', 'Sắt', '300 g'),
+    new Product('p004', 'Sắt Phi 22', 'Sắt', '300 g'),
+    new Product('p005', 'Nhôm hộp ', 'Nhôm', '2 kg'),
+    new Product('p006', 'Nhôm lá ', 'Nhôm', '2 kg'),
+];
 
 export default products;

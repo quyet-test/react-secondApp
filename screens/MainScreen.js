@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Text, View, Button, TouchableWithoutFeedback, Keyboard, Alert, StyleSheet, FlatList } from 'react-native';
 
-import Colors from '../constants/colors'
+import Colors from '../constants/colors';
+import Language from '../constants/language';
 
 const MainScreen = props => {
-
+    const languages = Language['vn'];
     const searchProductHandler = () => {
         props.onScreenChange('ProductDetail')
     }
@@ -17,10 +18,10 @@ const MainScreen = props => {
             <Text style={styles.title}> Menu </Text>
             <View style={styles.buttonContainer}>
                 <View style={styles.button}>
-                    <Button title={'Search Product'} onPress={searchProductHandler} color={Colors.primary} />
+                    <Button title={languages['Search Product']} onPress={searchProductHandler} color={Colors.primary} />
                 </View>
                 <View style={styles.button}>
-                    <Button title={'Update Product'} onPress={updateProductHandler} color={Colors.primary} />
+                    <Button title={languages['Update Product']} onPress={updateProductHandler} color={Colors.primary} />
                 </View>
             </View>
         </View>

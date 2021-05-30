@@ -8,8 +8,10 @@ import TitleText from '../components/TitleText';
 
 import products from '../data/products';
 import positions from '../data/positions';
+import language from '../constants/language';
 
 const ProductUpdate = props => {
+    const languages = language['vn'];
     const [productInfo, setProductInfo] = useState({});
     const [positionInfo, setPositionInfo] = useState({});
     const [readBarcode, setReadBarcode] = useState(false);
@@ -40,46 +42,45 @@ const ProductUpdate = props => {
     }
 
     const confirmInputHandler = () => {
-        const positionKeys = Object.keys(positions);
-        const positionId = positionKeys.find(id => positions[id].Zone == positionInfo.Zone && positions[id].Column == positionInfo.Column);
+        const position = positions.find(item => item.zone == positionInfo.zone && item.column == positionInfo.column);
 
-        if (positionId === undefined) {
+        if (position === undefined) {
             Alert.alert(
-                'Invalid Position',
-                `The Position with Colume ${positionInfo.Column} and Zone ${positionInfo.Zone} is not found`,
+                languages['Invalid Position'],
+                `${languages['Cannot found position with column and zone']}: ${positionInfo.column}, ${positionInfo.zone}.`,
                 [{ text: 'OK', 'style': 'destructive' }]
             );
             return;
         }
 
-        const productKeys = Object.keys(products);
-        const productId = productKeys.find(id => products[id].Name == productInfo.Name);
+        const positionId = position.id;
+        const product = products.find(item => item.name == productInfo.name);
 
-        if (productId === undefined) {
+        if (product === undefined) {
             Alert.alert(
-                'Invalid Product',
-                `The Product with Name ${productInfo.Name} is not found`,
+                languages['Invalid Product'],
+                `${languages['Cannot find the product']} ${productInfo.name}`,
                 [{ text: 'OK', 'style': 'destructive' }]
             );
             return;
         }
 
-        props.onUpdate(productId, positionId);
+        props.onUpdate(product.id, positionId);
 
         Alert.alert(
-            'Updated',
-            `Update Ok`,
+            languages['Updated'],
+            languages[`Update Ok`],
             [{ text: 'OK', 'style': 'destructive' }]
         );
     };
 
     const InputZoneHandler = (Zone) => {
-        const newPositions = { ...positionInfo, Zone: Zone };
+        const newPositions = { ...positionInfo, zone: Zone };
         setPositionInfo(newPositions);
     };
 
     const InputColumnHandler = (Zone) => {
-        const newPositions = { ...positionInfo, Zone: Zone };
+        const newPositions = { ...positionInfo, zone: Zone };
         setPositionInfo(newPositions);
     };
 
@@ -88,28 +89,28 @@ const ProductUpdate = props => {
             Keyboard.dismiss();
         }}>
             <View style={styles.screen}>
-                <TitleText style={styles.title}>Position Information</TitleText>
+                <TitleText style={styles.title}>{languages['Position Information']}</TitleText>
                 <Card style={styles.inputContainer}>
-                    <InputLine name='Zone' value={positionInfo.Zone} onInput={InputZoneHandler} />
-                    <InputLine name='Column' value={positionInfo.Column} onInput={(Column) => {
-                        setPositionInfo({ ...positionInfo, Column });
+                    <InputLine name={languages['Zone']} value={positionInfo.zone} onInput={InputZoneHandler} />
+                    <InputLine name={languages['Column']} value={positionInfo.column} onInput={(column) => {
+                        setPositionInfo({ ...positionInfo, column });
                     }} />
                 </Card>
-                <TitleText style={styles.title}>Product Information</TitleText>
+                <TitleText style={styles.title}>{languages['Product Information']}</TitleText>
                 <Card style={styles.inputContainer}>
-                    <InputLine name='Name' value={productInfo.Name} onInput={(Name) => {
+                    <InputLine name={languages['Name']} value={productInfo.Name} onInput={(Name) => {
                         setProductInfo({ ...productInfo, Name });
                     }} />
                 </Card>
                 <View style={styles.buttonContainer}>
                     <View style={styles.button}>
-                        <Button title={'Cancel'} onPress={cancelHandler} color={Colors.accent} />
+                        <Button title={languages['Cancel']} onPress={cancelHandler} color={Colors.accent} />
                     </View>
                     <View style={styles.button}>
-                        <Button title={'Confirm'} onPress={confirmInputHandler} color={Colors.primary} />
+                        <Button title={languages['Confirm']} onPress={confirmInputHandler} color={Colors.primary} />
                     </View>
                     <View style={styles.button}>
-                        <Button title={'Scan'} onPress={scanSearchingProductHandler} color={Colors.primary} />
+                        <Button title={languages['Scan']} onPress={scanSearchingProductHandler} color={Colors.primary} />
                     </View>
                 </View>
             </View>

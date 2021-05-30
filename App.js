@@ -3,20 +3,23 @@ import { StyleSheet, Alert, View } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font'
 
-import Header from './components/Header'
-import MainScreen from './screens/MainScreen'
+import ProductItem from './models/productItem';
+
+import Header from './components/Header';
+import MainScreen from './screens/MainScreen';
 import ProductDetail from './screens/ProductDetail';
 import ProductUpdate from './screens/ProductUpdate';
 import BarcodeReader from './components/barcodeScanner';
 
-import productPositions from './data/productInPositions';
+import ProductItems from './data/productItems';
 import './components/GlobalScanParams'
 import products from './data/products';
 import positions from './data/positions';
+import Language from './constants/language';
 
-const productPositionList = { ...productPositions };
+const productItems = [...ProductItems];
 const fetFonts = () => {
-  //global.productPositions = [...productPositions];
+  //global.productItems = [...productItems];
   return Font.loadAsync({
     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
     'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
@@ -24,7 +27,7 @@ const fetFonts = () => {
 };
 
 export default function App() {
-
+  const languages = Language['vn'];
   const [appLoaded, setApploaded] = useState(false);
   const [curScreen, setCurScreen] = useState('');
   const [previousScreen, setPreviousScreen] = useState('mainSreen');
@@ -68,12 +71,12 @@ export default function App() {
   }
 
   const searchProductPosition = (product) => {
-    return productPositionList[product] || [];
+    return productItems.filter(item => item.productId === product).map(item => item.positionId);
   };
 
   const addProductPosition = (productId, positionId) => {
-    const positions = productPositionList[productId];
-    productPositionList[productId] = [...positions, positionId];
+    const id = 'i' + productItems.length;
+    productItems.concat(new ProductItem(id, '', productId, positionId, 0, 0));
   }
 
   const scanCancelHandler = () => {
@@ -93,7 +96,7 @@ export default function App() {
       let valid = false;
       if (`${result.data}`.startsWith('p')) {
         const productId = result.data;
-        const product = products[productId];
+        const product = products.find(item => item.id === productId);
         if (typeof (product) === 'object') {
           valid = true;
 
@@ -102,7 +105,7 @@ export default function App() {
         // setProductInfo(products[productId]);
       } else if (`${result.data}`.startsWith('z')) {
         const positionId = result.data;
-        const position = positions[positionId];
+        const position = positions.find(position => position.id === positionId);
         if (typeof (position) === 'object') {
           valid = true;
 
@@ -150,7 +153,7 @@ export default function App() {
 
   return (
     <View style={styles.screen}>
-      <Header title={"Product Management Demo"} />
+      <Header title={languages["Product Management Demo"]} />
       {content}
     </View>
   );
