@@ -6,14 +6,15 @@ import CustomHeaderButton from '../components/HeaderButon'
 import { PRODUCTS } from '../data/dummy-data';
 import CategoryGridTile from '../components/CategoryGridTile';
 import LANGUAGES from '../constants/language'
+import ProductColors from '../constants/ProductColors';
 
 const languages = LANGUAGES['vn'];
 const CategoriesScreen = props => {
   const renderGridItem = itemData => {
     return (
       <CategoryGridTile
-        title={itemData.item.title}
-        color={itemData.item.color}
+        title={languages[itemData.item.title] ? languages[itemData.item.title] : itemData.item.title}
+        color={ProductColors[itemData.item.type]}
         onSelect={() => {
           props.navigation.navigate({
             routeName: 'CategoryProducts',

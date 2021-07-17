@@ -1,10 +1,10 @@
 export const TOGGLE_FAVORITE = 'TOGGLE_FAVORITE';
 export const FILTER_CHANGED = 'FILTER_CHANGED';
 
-export const toggleFavorite = (mealId) => {
+export const toggleFavorite = (productId) => {
     return {
         type: TOGGLE_FAVORITE,
-        mealId: mealId,
+        productId: productId,
     };
 }
 

@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import CustomHeaderButton from '../components/HeaderButon'
 import Colors from '../constants/colors';
 
-import { applyFilter } from '../store/actions/Meals';
+import { applyFilter } from '../store/actions/products';
 
 const FilterSwitch = props => {
 
@@ -76,7 +76,7 @@ const FiltersScreen = props => {
 FiltersScreen.navigationOptions = (navData) => {
 
   return {
-    headerTitle: 'Filter Meals',
+    headerTitle: 'Filter products',
     headerLeft: () => <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
       <Item
         title='Menu'

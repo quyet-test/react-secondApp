@@ -5,21 +5,21 @@ import { useSelector } from 'react-redux';
 
 import CustomHeaderButton from '../components/HeaderButon';
 import DefaultText from '../components/DefaultText';
-import MealList from '../components/MealList';
+import ProductItemList from '../components/ProductItemList';
 
 const FavoritesScreen = props => {
-  const favMeals = useSelector(state => state.products.favorites);
+  const favproducts = useSelector(state => state.products.favorites);
 
-  if (!Array.isArray(favMeals) || favMeals.length == 0) {
+  if (!Array.isArray(favproducts) || favproducts.length == 0) {
     return (
       <View style={styles.content} >
-        <DefaultText>There is no favorites meal. You can add some</DefaultText>
+        <DefaultText>There is no favorites product. You can add some</DefaultText>
       </View>
     );
   }
 
   return (
-    <MealList DataList={favMeals} navigation={props.navigation} />
+    <ProductItemList DataList={favproducts} navigation={props.navigation} />
   );
 };
 

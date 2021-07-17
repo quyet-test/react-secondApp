@@ -9,27 +9,27 @@ import {
 
 import DefaultText from './DefaultText';
 
-const MealItem = props => {
+const ProductItem = props => {
   return (
-    <View style={styles.mealItem}>
-      <TouchableOpacity onPress={props.onSelectMeal}>
+    <View style={styles.ProductItem}>
+      <TouchableOpacity onPress={props.onSelectProduct}>
         <View>
-          <View style={{ ...styles.mealRow, ...styles.mealHeader }}>
+          <View style={{ ...styles.productRow, ...styles.productHeader }}>
             <ImageBackground
               source={{ uri: props.image }}
               style={styles.bgImage}
             >
               <View style={styles.titleContainer}>
                 <Text style={styles.title} numberOfLines={1}>
-                  {props.title}
+                  {props.name}
                 </Text>
               </View>
             </ImageBackground>
           </View>
-          <View style={{ ...styles.mealRow, ...styles.productDetail }}>
-            <DefaultText>{props.duration}m</DefaultText>
-            <DefaultText>{props.complexity.toUpperCase()}</DefaultText>
-            <DefaultText>{props.affordability.toUpperCase()}</DefaultText>
+          <View style={{ ...styles.productRow, ...styles.productDetail }}>
+            <DefaultText>{props.position}</DefaultText>
+            <DefaultText>{props.weight.toUpperCase()}</DefaultText>
+            <DefaultText>{props.long.toUpperCase()}</DefaultText>
           </View>
         </View>
       </TouchableOpacity>
@@ -38,7 +38,7 @@ const MealItem = props => {
 };
 
 const styles = StyleSheet.create({
-  mealItem: {
+  ProductItem: {
     height: 200,
     width: '95%',
     backgroundColor: '#f5f5f5',
@@ -52,10 +52,10 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'flex-end',
   },
-  mealRow: {
+  productRow: {
     flexDirection: 'row'
   },
-  mealHeader: {
+  productHeader: {
     height: '85%'
   },
   productDetail: {
@@ -77,4 +77,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default MealItem;
+export default ProductItem;

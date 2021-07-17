@@ -13,8 +13,8 @@ import positions from '../data/positions';
 import language from '../constants/language';
 
 
+const languages = language['vn'];
 const renderListItem = (itemData) => {
-    const languages = language['vn'];
 
     //console.log(itemData.item);
     const position = positions.find(position => position.id === itemData.item);
@@ -28,7 +28,6 @@ const renderListItem = (itemData) => {
 };
 
 const SearchProductScreen = props => {
-    const languages = language['vn'];
     const [enteredInput, setEnteredInput] = useState('');
     const [confirmed, setConfirmed] = useState(false);
     const [foundProduct, setFoundProduct] = useState({});
@@ -76,6 +75,15 @@ const SearchProductScreen = props => {
         global.scanMethod = 1;
         props.onScreenChange('scan')
     }
+
+    const displayFoundProducts = () => {
+        props.navigation.navigate({
+            routeName: 'CategoryProducts',
+            params: {
+                categoryId: itemData.item.id
+            }
+        });
+    };
 
     let foundProductOutput;
     if (confirmed) {
@@ -139,6 +147,13 @@ const SearchProductScreen = props => {
             </View>
         </TouchableWithoutFeedback>
     )
+};
+
+SearchProductScreen.navigationOptions = (navData) => {
+
+    return {
+        headerTitle: languages['Search Product'],
+    }
 };
 
 const styles = StyleSheet.create({

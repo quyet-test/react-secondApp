@@ -11,6 +11,7 @@ import FiltersScreen from '../screens/FavoritesScreen';
 import CategoriesScreen from '../screens/CategoriesScreen';
 import CategoryProductsScreen from '../screens/CategoryProductsScreen';
 import SearchProductScreen from '../screens/SearchProductScreen';
+import ProductDetailScreen from '../screens/ProductDetailScreen';
 import ProductUpdate from '../screens/ProductUpdate';
 import BarcodeReaderScreen from '../screens/barcodeScanner';
 
@@ -32,12 +33,12 @@ const stackNavigationOptions =
 
 const ProductNavigatorOptions = createStackNavigator(
     {
-        // Products: ProductUpdate,
+        Products: CategoriesScreen,
         CategoryProducts: {
-            screen: CategoriesScreen,
+            screen: CategoryProductsScreen,
         },
         // ProductItem: ProductItemScreen,
-        // ItemDetail: ItemDetailScreen,
+        ProductDetail: ProductDetailScreen,
         // AddItem: AddItemScreen,
         ScanBarcode: BarcodeReaderScreen,
     },
@@ -48,6 +49,7 @@ const ProductNavigatorOptions = createStackNavigator(
 const SearchNavigator = createStackNavigator(
     {
         Search: SearchProductScreen,
+        ProductDetail: ProductDetailScreen,
         // ItemDetail: ItemDetailScreen,
         ScanBarcode: BarcodeReaderScreen
     },

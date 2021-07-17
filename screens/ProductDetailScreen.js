@@ -3,6 +3,7 @@ import { View, Text, Button, ScrollView, Image, StyleSheet } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import { useSelector, useDispatch } from 'react-redux';
 
+import { POSITIONS } from '../data/dummy-data';
 import CustomHeaderButton from '../components/HeaderButon';
 import DefaultText from '../components/DefaultText';
 import { toggleFavorite } from '../store/actions/Products';
@@ -15,19 +16,20 @@ const ListView = props => {
 }
 
 const ProductDetailScreen = props => {
-  const mealId = props.navigation.getParam('mealId');
-  console.log('refresh');
+  const productId = props.navigation.getParam('productId');
+  // console.log('refresh');
   // const isFav = props.navigation.getParam('isFav');
-  const availableMeals = useSelector(state => state.products.meals);
-  const isFav = useSelector(state => state.products.favorites.some(item => item.id === mealId));
-
-  const selectedMeal = availableMeals.find(meal => meal.id == mealId);
+  const availableProducts = useSelector(state => state.products.products);
+  const isFav = useSelector(state => state.products.favorites.some(item => item.id === productId));
+  // console.log(productId);
+  // console.log(availableProducts);
+  const selectedproduct = availableProducts.find(product => product.id == productId);
   const dispatch = useDispatch();
 
   const toggleFavoriteHandler = useCallback(() => {
-    dispatch(toggleFavorite(mealId));
+    dispatch(toggleFavorite(productId));
 
-  }, [toggleFavorite, mealId]);
+  }, [toggleFavorite, productId]);
 
   useEffect(() => {
     props.navigation.setParams({ toggFav: toggleFavoriteHandler });
@@ -38,24 +40,29 @@ const ProductDetailScreen = props => {
     props.navigation.setParams({ isFav });
   }, [isFav]);
 
+  const position = POSITIONS.find(position => position.id == selectedproduct.positionId);
+
+  selectedproduct.position = `Khu vực ${position.zone}, cột ${position.column}`;
+
+
   return (
     <ScrollView>
-      <Image style={styles.image} source={{ uri: selectedMeal.imageUrl }} />
+      <Image style={styles.image} source={{ uri: selectedproduct.imageUrl }} />
       <View style={styles.details}>
-        <DefaultText>{selectedMeal.duration}m</DefaultText>
-        <DefaultText>{selectedMeal.complexity.toUpperCase()}</DefaultText>
-        <DefaultText>{selectedMeal.affordability.toUpperCase()}</DefaultText>
+        <DefaultText>{selectedproduct.position}</DefaultText>
+        <DefaultText>{selectedproduct.weight + ' Kg'}</DefaultText>
+        <DefaultText>{selectedproduct.long + 'm'}</DefaultText>
       </View>
-      <Text style={styles.title}>Ingredients</Text>
-      {selectedMeal.ingredients.map(ingredient => <ListView key={ingredient}> {ingredient} </ListView>)}
+      {/* <Text style={styles.title}>Ingredients</Text>
+      {selectedproduct.ingredients.map(ingredient => <ListView key={ingredient}> {ingredient} </ListView>)}
       <Text style={styles.title}>Steps</Text>
-      {selectedMeal.steps.map(step => <ListView key={step}> {step} </ListView>)}
+      {selectedproduct.steps.map(step => <ListView key={step}> {step} </ListView>)} */}
     </ScrollView>
   );
 };
 
 ProductDetailScreen.navigationOptions = (navigationData) => {
-  const title = navigationData.navigation.getParam('mealTitle');
+  const title = navigationData.navigation.getParam('productTitle');
   const toggleFav = navigationData.navigation.getParam('toggFav');
   const isFav = navigationData.navigation.getParam('isFav');
 

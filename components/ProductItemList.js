@@ -2,25 +2,25 @@ import React from 'react';
 import { View, Text, Button, FlatList, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import MealItem from '../components/MealItem'
+import ProductItem from './ProductItem'
 
-const MealList = props => {
+const ProductItemList = props => {
     const favorites = useSelector(state => state.products.favorites);
-    const renderMealItem = itemData => {
-        const isFavorite = favorites.some(meal => meal.id === itemData.item.id);
+    const renderProductItem = itemData => {
+        const isFavorite = favorites.some(product => product.id === itemData.item.id);
         return (
-            <MealItem
-                title={itemData.item.title}
+            <ProductItem
+                name={itemData.item.name}
                 image={itemData.item.imageUrl}
-                duration={itemData.item.duration}
-                complexity={itemData.item.complexity}
-                affordability={itemData.item.affordability}
-                onSelectMeal={() => {
+                position={itemData.item.position}
+                weight={`${itemData.item.weight} Kg`}
+                long={`${itemData.item.long} m`}
+                onSelectProduct={() => {
                     props.navigation.navigate({
-                        routeName: 'ProductDetail',
+                        routeName: props.routeName,
                         params: {
-                            mealId: itemData.item.id,
-                            mealTitle: itemData.item.title,
+                            productId: itemData.item.id,
+                            productTitle: itemData.item.name,
                             isFav: isFavorite,
                         }
                     })
@@ -34,7 +34,7 @@ const MealList = props => {
             <FlatList
                 data={props.DataList}
                 keyExtractor={(item, index) => item.id}
-                renderItem={renderMealItem}
+                renderItem={renderProductItem}
                 style={{ width: '100%' }}
             />
         </View>
@@ -49,4 +49,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default MealList;
+export default ProductItemList;
