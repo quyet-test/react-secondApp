@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Text, View, Button, TouchableWithoutFeedback, Keyboard, Alert, StyleSheet, FlatList, ScrollView } from 'react-native';
 
-import Card from '../components/Card'
+import Card from '../components/UI/Card'
 import Colors from '../constants/colors'
-import Input from '../components/Input'
-import BodyText from '../components/BodyText';
+import Input from '../components/UI/Input'
+import BodyText from '../components/UI/BodyText';
 
 
 import '../components/GlobalScanParams'
@@ -27,7 +27,7 @@ const renderListItem = (itemData) => {
     )
 };
 
-const ProductDetail = props => {
+const SearchProductScreen = props => {
     const languages = language['vn'];
     const [enteredInput, setEnteredInput] = useState('');
     const [confirmed, setConfirmed] = useState(false);
@@ -84,11 +84,11 @@ const ProductDetail = props => {
             <View style={styles.productContainer}>
                 <View style={styles.productItem}>
                     <Text>{languages['Name']}</Text>
-                    <Text>{foundProduct.name}</Text>
+                    <Text>{languages[foundProduct.name]}</Text>
                 </View>
                 <View style={styles.productItem}>
                     <Text>{languages['Type']}</Text>
-                    <Text>{foundProduct.type}</Text>
+                    <Text>{languages[foundProduct.type]}</Text>
                 </View>
                 {/* <View style={styles.productItem}>
                     <Text>{languages['Weight']}</Text>
@@ -114,9 +114,9 @@ const ProductDetail = props => {
             Keyboard.dismiss();
         }}>
             <View style={styles.screen}>
-                <Text style={styles.title}> {languages['Search or Updadate Product']}</Text>
+                <Text style={styles.title}> {languages['Search Product']}</Text>
                 <Card style={styles.inputContainer}>
-                    <Text>{languages['Search Product']}:</Text>
+                    <Text>{languages['Product Code']}:</Text>
                     <Input style={styles.input}
                         blurOnSummit autoCapitalize='none'
                         autoCorrect={false}
@@ -224,4 +224,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ProductDetail;
+export default SearchProductScreen;

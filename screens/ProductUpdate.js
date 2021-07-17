@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Text, View, Button, TouchableWithoutFeedback, Keyboard, Alert, StyleSheet, FlatList } from 'react-native';
 
-import Card from '../components/Card';
-import InputLine from '../components/InputLine';
+import Card from '../components/UI/Card';
+import InputLine from '../components/UI/InputLine';
 import Colors from '../constants/colors';
-import TitleText from '../components/TitleText';
+import TitleText from '../components/UI/TitleText';
 
 import products from '../data/products';
 import positions from '../data/positions';
