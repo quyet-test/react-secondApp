@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font'
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { enableScreens } from 'react-native-screens';
+import ReduxThunk from 'redux-thunk';
 
-import ProductNavigator from './navigation/ProductNavigator'
-import productsReducer from './store/reducers/Products'
+import ProductNavigator from './navigation/ProductNavigator';
+import productsReducer from './store/reducers/Products';
+import positionsReducer from './store/reducers/Positions';
+import productItemsReducer from './store/reducers/ProductItems';
 
 enableScreens();
 const rootReducer = combineReducers({
-  products: productsReducer
+  products: productsReducer,
+  positions: positionsReducer,
+  productItems: productItemsReducer
 });
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 const fetchFonts = () => {
   //global.productItems = [...productItems];
   return Font.loadAsync({

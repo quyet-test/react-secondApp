@@ -1,34 +1,34 @@
-import servers from './../../config/productServer';
-import Product from '../../models/product';
-export const SET_PRODUCT_TYPES = 'SET_PRODUCT_TYPES';
+import servers from '../../config/productServer';
+import Position from '../../models/position';
+
+export const SET_POSITIONS = 'SET_POSITIONS';
 
 
-export const fetchProducts = () => {
+export const fetchPositions = () => {
     return async dispatch => {
         // any async code you want!
         try {
             const response = await fetch(
-                `${servers.host}/${servers.productTypes}`
+                `${servers.host}/${servers.positions}`
             );
 
             if (!response.ok) {
                 throw new Error('Something went wrong!');
             }
-
             const resData = await response.json();
-            const loadedProductTypes = [];
+            const loadedPositions = [];
             for (const key in resData) {
-                loadedProductTypes.push(
-                    new Product(
+                loadedPositions.push(
+                    new Position(
                         resData[key].id,
-                        resData[key].title,
-                        resData[key].type,
+                        resData[key].zone,
+                        resData[key].column,
                         resData[key].description
                     )
                 );
             }
 
-            dispatch({ type: SET_PRODUCT_TYPES, products: loadedProductTypes });
+            dispatch({ type: SET_POSITIONS, positions: loadedPositions });
         } catch (err) {
             // send to custom analytics server
             throw err;

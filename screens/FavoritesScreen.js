@@ -8,7 +8,7 @@ import DefaultText from '../components/DefaultText';
 import ProductItemList from '../components/ProductItemList';
 
 const FavoritesScreen = props => {
-  const favproducts = useSelector(state => state.products.favorites);
+  const favproducts = useSelector(state => state.productItems.favorites);
 
   if (!Array.isArray(favproducts) || favproducts.length == 0) {
     return (

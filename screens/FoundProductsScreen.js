@@ -10,10 +10,7 @@ import LANGUAGES from '../constants/language';
 
 const languages = LANGUAGES['vn'];
 const CategoryProductscreen = props => {
-  const catId = props.navigation.getParam('categoryId');
-  const displayedProducts = useSelector(state => state.productItems.items.filter(
-    product => product.productId == catId
-  ))
+  const displayedProducts = props.navigation.getParam('foundProducts');
 
   if (displayedProducts.length == 0) {
     return (
@@ -36,11 +33,11 @@ const CategoryProductscreen = props => {
 
 CategoryProductscreen.navigationOptions = navigationData => {
 
-  const catId = navigationData.navigation.getParam('categoryId');
-  const item = PRODUCTS.find(cat => cat.id === catId);
+  // const catId = navigationData.navigation.getParam('categoryId');
+  // const item = PRODUCTS.find(cat => cat.id === catId);
 
   return {
-    headerTitle: languages[item.title],
+    headerTitle: languages['Search Result'],
   }
 };
 

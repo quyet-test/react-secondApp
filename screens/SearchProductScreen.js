@@ -1,153 +1,176 @@
-import React, { useState } from 'react';
-import { Text, View, Button, TouchableWithoutFeedback, Keyboard, Alert, StyleSheet, FlatList, ScrollView } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, Button, Input, StyleSheet } from 'react-native';
+import SelectDropdown from 'react-native-select-dropdown'
+import { useDispatch, useSelector } from 'react-redux';
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-import Card from '../components/UI/Card'
-import Colors from '../constants/colors'
-import Input from '../components/UI/Input'
-import BodyText from '../components/UI/BodyText';
-
-
-import '../components/GlobalScanParams'
-import products from '../data/products';
-import positions from '../data/positions';
+import CustomHeaderButton from '../components/HeaderButon'
+import Colors from '../constants/colors';
+import { POSITIONS, PRODUCTS, PRODUCT_ITEMS } from '../data/dummy-data';
 import language from '../constants/language';
 
 
 const languages = language['vn'];
-const renderListItem = (itemData) => {
 
-    //console.log(itemData.item);
-    const position = positions.find(position => position.id === itemData.item);
-    //console.log(JSON.stringify(positions[itemData.item]));
-    return (
-        <View style={styles.listItem}>
-            <BodyText>{languages['Column']}: {position.column}</BodyText>
-            <BodyText>{languages['Zone']}: {position.zone}</BodyText>
-        </View>
-    )
-};
+import { applyFilter } from '../store/actions/ProductItems';
 
-const SearchProductScreen = props => {
-    const [enteredInput, setEnteredInput] = useState('');
-    const [confirmed, setConfirmed] = useState(false);
-    const [foundProduct, setFoundProduct] = useState({});
-    const [readBarcode, setReadBarcode] = useState(false);
+const SearchDropdown = props => {
+    const translate = lable => languages[lable] || lable;
+    return <View style={styles.dropdownsRow}>
+        <Text style={styles.lableText}>{props.label}</Text>
+        <SelectDropdown
+            defaultButtonText={props.label}
+            data={props.selectableData}
+            onSelect={props.onSelect}
+            buttonTextAfterSelection={(selectedItem, index) => {
+                return translate(selectedItem['title']);
+            }}
+            rowTextForSelection={(item, index) => {
+                return translate(item['title']);
+            }}
+            buttonStyle={styles.dropdown1BtnStyle}
+            buttonTextStyle={styles.dropdown1BtnTxtStyle}
+            renderDropdownIcon={() => {
+                return (
+                    <FontAwesome name="chevron-down" color={"#444"} size={18} />
+                );
+            }}
+            dropdownIconPosition={"right"}
+            dropdownStyle={styles.dropdown1DropdownStyle}
+            rowStyle={styles.dropdown1RowStyle}
+            rowTextStyle={styles.dropdown1RowTxtStyle}
+        />
+    </View>
+}
 
-    if (!readBarcode && props.data) {
-        setEnteredInput(props.data);
-        setReadBarcode(true);
+
+const searchProducts = (searchInfo, products) => {
+    console.log(searchInfo);
+
+    if (!Array.isArray(products)) {
+
+        return [];
     }
 
-    const InputNumberHandler = inputText => {
-        setEnteredInput(inputText);
-    };
-
-    const resetInputHandler = () => {
-        setEnteredInput('');
-        setConfirmed(false);
-    };
-
-    const cancelHandler = () => {
-        resetInputHandler();
-        props.onCancel();
-        // props.onScreenChange('mainScreen');
-    }
-
-    const confirmInputHandler = () => {
-        const chosenProduct = products.find(item => item.id === enteredInput);
-        setEnteredInput('');
-        if (chosenProduct === undefined) {
-            Alert.alert(
-                languages['Invalid Product'],
-                languages['The input Product is not found'],
-                [{ text: 'OK', 'style': 'destructive', onPress: resetInputHandler }]
-            );
-            return;
+    const foundProducts = products.filter(product => {
+        if (searchInfo.productId != '' && product.id != searchInfo.productId) {
+            return false;
+        }
+        if (searchInfo.positionId != 'All' && product.positionId != searchInfo.positionId) {
+            return false;
+        }
+        if (searchInfo.productType != 'All' && product.productId != searchInfo.productType) {
+            return false;
         }
 
-        setConfirmed(true);
-        // setSelectedNumber(chosenProduct);
-        setFoundProduct(chosenProduct);
-    };
+        return true;
+    });
 
-    const scanSearchingProductHandler = () => {
-        //setScanMethod(1);
-        global.scanMethod = 1;
-        props.onScreenChange('scan')
-    }
+    console.log(foundProducts.length);
+    return foundProducts;
+}
 
-    const displayFoundProducts = () => {
-        props.navigation.navigate({
-            routeName: 'CategoryProducts',
+const SearchProductScreen = props => {
+    const { navigation } = props;
+    const displayedProducts = useSelector(state => state.productItems.items);
+
+    const [productId, setProductId] = useState('');
+    const [productType, setProductType] = useState('All');
+    const [zone, setZone] = useState('All');
+    const [scanning, setScanning] = useState(false);
+
+    const selectableProductTypes = [{ id: 'All', title: 'All' }, ...PRODUCTS]
+    const positions = POSITIONS.map(position => { return { id: position.id, title: `${position.zone} - ${position.column}` } })
+    const selectablePositions = [{ id: 'All', title: 'All' }, ...positions]
+
+    const dispatch = useDispatch();
+
+    const savedFilters = useCallback(() => {
+        const searchInfo = {
+            positionId: zone,
+            productType: productType,
+            productId: productId,
+        }
+        console.log(searchInfo)
+        const foundProducts = searchProducts(searchInfo, displayedProducts)
+        navigation.navigate({
+            routeName: 'FoundProducts',
             params: {
-                categoryId: itemData.item.id
+                foundProducts
             }
         });
-    };
+    }, [searchProducts, productId, productType, zone]);
 
-    let foundProductOutput;
-    if (confirmed) {
-        const positions = props.searchProductPosition(foundProduct.id); //productPositions[foundProduct.Id];
-        foundProductOutput = <View style={styles.screen}>
-            <View style={styles.productContainer}>
-                <View style={styles.productItem}>
-                    <Text>{languages['Name']}</Text>
-                    <Text>{languages[foundProduct.name]}</Text>
-                </View>
-                <View style={styles.productItem}>
-                    <Text>{languages['Type']}</Text>
-                    <Text>{languages[foundProduct.type]}</Text>
-                </View>
-                {/* <View style={styles.productItem}>
-                    <Text>{languages['Weight']}</Text>
-                    <Text>{foundProduct.Weight}</Text>
-                </View> */}
-                <View>
-                    <BodyText>{languages['You can find the product at:']}</BodyText>
-                </View>
-                <FlatList
-                    keyExtractor={item => item.id}
-                    data={positions}
-                    renderItem={renderListItem.bind(this)}
-                    contentContainerStyle={styles.positionList}
-                />
-            </View>
+    useEffect(() => {
+        navigation.setParams({ save: savedFilters });
+    }, [savedFilters]);
 
-        </View>
+    const cancelHandler = () => {
 
     }
 
+    const scanSearchingProductHandler = () => {
+        setScanning(true);
+        props.navigation.navigate({
+            routeName: 'ScanBarcode',
+            params: {
+                originScreen: 'Search',
+            }
+        })
+    }
     return (
-        <TouchableWithoutFeedback onPress={() => {
-            Keyboard.dismiss();
-        }}>
-            <View style={styles.screen}>
-                <Text style={styles.title}> {languages['Search Product']}</Text>
-                <Card style={styles.inputContainer}>
-                    <Text>{languages['Product Code']}:</Text>
-                    <Input style={styles.input}
-                        blurOnSummit autoCapitalize='none'
-                        autoCorrect={false}
-                        value={enteredInput}
-                        onChangeText={InputNumberHandler}
-                    />
-                    <View style={styles.buttonContainer}>
-                        <View style={styles.button}>
-                            <Button title={languages['Cancel']} onPress={cancelHandler} color={Colors.accent} />
-                        </View>
-                        <View style={styles.button}>
-                            <Button title={languages['OK']} onPress={confirmInputHandler} color={Colors.primary} />
-                        </View>
-                        <View style={styles.button}>
-                            <Button title={languages['Scan']} onPress={scanSearchingProductHandler} color={Colors.primary} />
-                        </View>
-                    </View>
-                </Card>
-                {foundProductOutput}
+        <View style={styles.screen}>
+            <Text style={styles.title}>Available filters / Restrictions</Text>
+            <SearchDropdown
+                label='Product Type'
+                isTranslated={true}
+                index={productType}
+                selectableData={selectableProductTypes}
+                onSelect={(item, index) => { console.log(index), setProductType(item.id) }}
+            />
+            <SearchDropdown
+                label='Position'
+                titleLabel='title'
+                index={zone}
+                selectableData={selectablePositions}
+                onSelect={(item, index) => { setZone(item.id) }}
+            />
+            <Text>{languages['Product Code']}</Text>
+            <View style={styles.buttonContainer}>
+                <View style={styles.button}>
+                    <Button title={languages['Cancel']} onPress={cancelHandler} color={Colors.accent} />
+                </View>
+                <View style={styles.button}>
+                    <Button title={languages['OK']} onPress={navigation.getParam('save')} color={Colors.primary} />
+                </View>
+                <View style={styles.button}>
+                    <Button title={languages['Scan']} onPress={scanSearchingProductHandler} color={Colors.primary} />
+                </View>
             </View>
-        </TouchableWithoutFeedback>
-    )
+        </View>
+    );
 };
+
+// SearchProductScreen.navigationOptions = (navData) => {
+
+//     return {
+//         headerTitle: 'Filter products',
+//         headerLeft: () => <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+//             <Item
+//                 title='Menu'
+//                 iconName='ios-menu'
+//                 onPress={() => { navData.navigation.openDrawer() }}
+//             />
+//         </HeaderButtons>,
+//         headerRight: () => <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+//             <Item
+//                 title='Save'
+//                 iconName='ios-save'
+//                 onPress={navData.navigation.getParam('save')}
+//             />
+//         </HeaderButtons>
+//     }
+// };
 
 SearchProductScreen.navigationOptions = (navData) => {
 
@@ -155,51 +178,54 @@ SearchProductScreen.navigationOptions = (navData) => {
         headerTitle: languages['Search Product'],
     }
 };
-
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        padding: 5,
         alignItems: 'center'
-    },
-    productContainer: {
-        //  flex: 1,
-        padding: 5,
-        alignItems: 'center'
-    },
-    productDetail: {
-        flexDirection: 'row',
-        width: '40%',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingHorizontal: 15,
-        paddingVertical: 5,
-        marginTop: 10,
-    },
-    productItem: {
-        borderColor: '#ccc',
-        borderWidth: 1,
-        padding: 15,
-        marginVertical: 5,
-        backgroundColor: 'white',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: 300
-    },
-    positionContainer: {
-        flex: 1,
-        width: '60%'
     },
     title: {
-        fontSize: 20,
-        marginVertical: 10,
-        fontFamily: 'open-sans-bold'
+        fontFamily: 'open-sans',
+        fontSize: 22,
+        margin: 20,
+        textAlign: 'center'
     },
-    inputContainer: {
-        width: 300,
-        maxWidth: '80%',
+    filterContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        fontFamily: 'open-sans-bold',
+        width: '80%',
+        height: 400
+    },
+    lableText: {
+        height: 50,
+        width: '30%',
+        alignItems: 'center',
+        textAlign: 'left'
+    },
+    dropdownsRow: {
+        flexDirection: "row",
+        width: "100%",
+        paddingHorizontal: "5%",
+    },
+
+    dropdown1BtnStyle: {
+        flex: 1,
+        height: 50,
+        backgroundColor: "#FFF",
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: "#444",
+    },
+    dropdown1BtnTxtStyle: { color: "#444", textAlign: "left" },
+    dropdown1DropdownStyle: { backgroundColor: "#EFEFEF", width: '80%' },
+    dropdown1RowStyle: {
+        backgroundColor: "#EFEFEF",
+        borderBottomColor: "#C5C5C5",
+    },
+    dropdown1RowTxtStyle: { color: "#444", textAlign: "left" },
+    button: {
+        width: 75,
+        fontSize: 15,
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -208,34 +234,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5,
         marginTop: 10,
     },
-    button: {
-        width: 75,
-        fontSize: 15,
-    },
     input: {
         textAlign: 'center',
         width: 50,
-    },
-    summaryContainer: {
-        marginTop: 20
-    },
-    listItem: {
-        borderColor: '#ccc',
-        borderWidth: 1,
-        padding: 20,
-        marginVertical: 10,
-        marginLeft: 15,
-        marginRight: 5,
-        backgroundColor: 'white',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '79%',
-    },
-    positionList: {
-        flexGrow: 1,
-        // alignItems: 'center',
-        justifyContent: 'flex-start',
-        width: '100%',
     },
 });
 

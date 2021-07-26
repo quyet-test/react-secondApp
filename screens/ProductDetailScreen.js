@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { POSITIONS } from '../data/dummy-data';
 import CustomHeaderButton from '../components/HeaderButon';
 import DefaultText from '../components/DefaultText';
-import { toggleFavorite } from '../store/actions/Products';
+import { toggleFavorite } from '../store/actions/ProductItems';
 
 
 const ListView = props => {
@@ -19,8 +19,8 @@ const ProductDetailScreen = props => {
   const productId = props.navigation.getParam('productId');
   // console.log('refresh');
   // const isFav = props.navigation.getParam('isFav');
-  const availableProducts = useSelector(state => state.products.products);
-  const isFav = useSelector(state => state.products.favorites.some(item => item.id === productId));
+  const availableProducts = useSelector(state => state.productItems.items);
+  const isFav = useSelector(state => state.productItems.favorites.some(item => item.id === productId));
   // console.log(productId);
   // console.log(availableProducts);
   const selectedproduct = availableProducts.find(product => product.id == productId);

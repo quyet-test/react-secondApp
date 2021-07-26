@@ -1,17 +1,17 @@
 
 // import { PRODUCT_ITEMS } from '../../data/dummy-data';
-import { SET_PRODUCT_TYPES } from '../actions/Products';
+import { SET_POSITIONS } from '../actions/Positions';
 
 const initiatedState = {
-    products: [],
+    positions: [],
 };
 
 export default (state = initiatedState, action) => {
     console.log(action.type);
     switch (action.type) {
-        case SET_PRODUCT_TYPES:
+        case SET_POSITIONS:
             return {
-                products: action.products,
+                positions: action.positions,
                 // userProducts: action.products.filter(prod => prod.ownerId === 'u1')
             };
         default:

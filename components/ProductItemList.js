@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import ProductItem from './ProductItem'
 
 const ProductItemList = props => {
-    const favorites = useSelector(state => state.products.favorites);
+    const favorites = useSelector(state => state.productItems.favorites);
     const renderProductItem = itemData => {
         const isFavorite = favorites.some(product => product.id === itemData.item.id);
         return (

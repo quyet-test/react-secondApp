@@ -35,5 +35,11 @@ export default {
         'Filter!!!': 'Lọc sản phẩm !!!',
         'Search': 'Tìm kiếm',
         'Product Categories': 'Danh sách sản phẩm',
+        'Product Type': 'Loại sản phẩm',
+        'Product code': 'Mã sản phẩm',
+        'All': 'Tất cả',
+        'Search Result': 'Kết quả tìm kiếm',
+        'An error occurred!': 'Đã có lỗi xảy ra',
+        'Try again': 'Thử lại',
     }
 }

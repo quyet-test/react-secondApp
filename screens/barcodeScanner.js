@@ -23,6 +23,11 @@ const BarcodeReaderScreen = props => {
     props.onScanned({ type, data });
   };
 
+  const goBack = () => {
+
+    props.navigation.goBack()
+  }
+
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
   }
@@ -43,7 +48,7 @@ const BarcodeReaderScreen = props => {
 
         <View style={styles.buttonContainer}>
           <View style={styles.button}>
-            <Button title="CANCEL" color="red" onPress={props.onCancel} />
+            <Button title="CANCEL" color="red" onPress={goBack} />
           </View>
         </View>
       </View>

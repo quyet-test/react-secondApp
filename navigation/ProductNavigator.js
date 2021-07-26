@@ -14,6 +14,7 @@ import SearchProductScreen from '../screens/SearchProductScreen';
 import ProductDetailScreen from '../screens/ProductDetailScreen';
 import ProductUpdate from '../screens/ProductUpdate';
 import BarcodeReaderScreen from '../screens/barcodeScanner';
+import FoundProductsScreen from '../screens/FoundProductsScreen';
 
 import Colors from '../constants/colors';
 import Language from '../constants/language';
@@ -49,9 +50,10 @@ const ProductNavigatorOptions = createStackNavigator(
 const SearchNavigator = createStackNavigator(
     {
         Search: SearchProductScreen,
-        ProductDetail: ProductDetailScreen,
+        FoundProducts: FoundProductsScreen,
         // ItemDetail: ItemDetailScreen,
-        ScanBarcode: BarcodeReaderScreen
+        ScanBarcode: BarcodeReaderScreen,
+        ProductDetail: ProductDetailScreen,
     },
     {
         navigationOptions: {
